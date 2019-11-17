@@ -1,26 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {FC} from 'react';
 import './App.css';
+import Dashboard from "./components/dashboard/Dashboard";
+import {useUser} from "./context/user-context";
+import {FullPageSpinner} from "./components/login/full-page-spinner";
+import LoginScreen from "./components/login/Login-screen";
+import RegisterScreen from "./components/register/register-screen";
+import {Switch, Route} from "react-router-dom";
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App: FC = () => {
+    const user = useUser();
+
+    return (
+        <React.Suspense fallback={<FullPageSpinner/>}>
+            <div style={{height: '100%'}}>
+                <Switch>
+                    <Route path="/register">
+                        <RegisterScreen/>
+                    </Route>
+
+                    <Route path="/">
+                        {user ? <Dashboard/> : <LoginScreen/>}
+                    </Route>
+                </Switch>
+            </div>
+        </React.Suspense>
+    );
+
+};
 
 export default App;
